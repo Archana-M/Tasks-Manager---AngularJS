@@ -1,0 +1,181 @@
+<html>
+<head>
+	<meta charset="UTF-8"> 
+
+	<title>Task Manager</title>
+
+
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.5/angular.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.5/angular-route.min.js"></script>
+
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+
+	<style type="text/css">
+
+	body {
+		background-color: #1d424a;
+	}
+
+	.header{
+		text-align: center;
+		color: white;
+		font-family: Courier New, Lucida Console;
+		font-weight: bold;
+		font-size: 70px;
+		margin-bottom: 50px;
+		margin-top: 50px;
+	}
+
+	.thead{
+		background-color: #9a4d0d;
+		color: white;
+		font-family: Courier New, Lucida Console;
+		font-size: 25px;
+		font-weight: bold;
+		text-align: center;
+	}
+
+	.tbody{
+		font-family: Courier New, Lucida Console;
+		font-size: 25px;
+		text-align: center;
+		
+	}
+
+	.btn1{
+		margin-left: 100px;
+		border-radius: 10px;
+		font-family: Courier New, Lucida Console;
+	}
+
+	.btn2{
+			
+		font-family: Courier New, Lucida Console;
+	}
+
+	.table{
+		background-color: #FFFACD;
+		
+	}
+
+	.form{
+		width: 200px;
+		height: 40px;
+		border-radius: 5px;
+	}
+
+
+
+	</style>
+
+	
+
+	<script type="text/javascript">
+
+	 var myApp = angular.module('myApp', [])
+
+	 myApp.factory('taskFactory', function(){
+
+	 	var tasks = [];
+	 	var factory = {};
+
+	 factory.addTasks = function(todo){
+
+	 	var date = new Date;
+	 		date = date.toString();
+	 		date = date.split(' ');
+	 		date = date[1]+ ' ' +date[2]+ ' ' +date[3];
+
+	 	tasks.push({
+	 		name: todo.name,
+	 		priority: todo.priority,
+	 		deadline: todo.deadline,
+	 		created: date
+	 	})
+
+
+	 }
+
+	 factory.getTasks = function(){
+	 	return tasks;
+	 }
+
+	 factory.removeTasks = function(taskname){
+	 	tasks.splice(tasks.indexOf(taskname),1);
+	 }
+
+	 return factory;
+
+	 })
+
+	 myApp.controller('tasksController', function ($scope, taskFactory){
+
+	 	$scope.tasks = taskFactory.getTasks();
+
+	 	$scope.addTask = function (){
+	 		taskFactory.addTasks($scope.todo)
+	 		}
+
+	 	$scope.removeTask = function (taskname){
+	 		taskFactory.removeTasks(taskname);
+	 	}
+
+	 })
+
+	</script>
+</head>
+<body ng-app = 'myApp'>
+
+<div ng-controller = 'tasksController' class = 'container'>
+
+	<h2 class = 'header'> Task Manager</h2>
+
+	<table class="table table-hover">
+		<tr >
+			<th class = 'thead'>Tasks</th>
+			<th class = 'thead'>Priority</th>
+			<th class = 'thead'>Deadline</th>
+			<th class = 'thead'>Created On</th>
+			<th class = 'thead'>Action</th>
+		</tr>
+
+		<tr>
+			<tr ng-repeat = 'task in tasks'>
+			<td class = 'tbody' ng-bind = 'task.name'></td>
+			<td class = 'tbody' ng-bind = 'task.priority'></td>
+			<td class = 'tbody' ng-bind = 'task.deadline'></td>
+			<td class = 'tbody' ng-bind = 'task.created'></td>
+			<td><button type="submit" class="btn1 btn-default btn-danger" ng-click = 'removeTask()'>Remove</button></td>
+		</tr>
+
+		</tr>
+  
+	</table>
+
+
+<form class="form-inline">
+  <div class="form-group" >
+    <input type="text" class="form" id="tasks" placeholder="Tasks" ng-model = 'todo.name'>
+  </div>
+  <div class="form-group">
+    <select class="form" ng-model = 'todo.priority'>
+		  <option label="high">High</option>
+		  <option label="moderate">Moderate</option>
+		  <option label="low">Low</option>
+	</select>
+  </div>
+  <div class="form-group">
+    <select class="form" ng-model = 'todo.deadline' placeholder="Tasks">
+		  <option>Today</option>
+		  <option>This Week</option>
+		  <option>This Month</option>
+	</select>
+  </div>
+  <button type="submit" class="btn2 btn-default btn-success btn-lg" ng-click = 'addTask()'>Add Task</button>
+</form>
+
+</div>
+
+</body>
+</html>
